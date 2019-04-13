@@ -27,6 +27,7 @@ def compartment2():
 
 def compartment3():
   control_pins = [10,9,11,8]
+  #control_pins = [8,11,9,10]
   for pin in control_pins:
     GPIO.setup(pin, GPIO.OUT)
     GPIO.output(pin, 0)
@@ -40,12 +41,12 @@ def compartment3():
     [0,0,0,1],
     [1,0,0,1]
   ]
-  for i in range(512):
+  for i in range(11):
     for halfstep in range(8):
       for pin in range(4):
         GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
-      time.sleep(0.001)
+      time.sleep(0.03)
   GPIO.cleanup()
   GPIO.setmode(GPIO.BCM)
 
-#compartment3()
+compartment3()

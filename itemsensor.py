@@ -12,10 +12,12 @@ def itemsensor():
         print(dist)
         if dist < 10:
             count = count + 1
-            if count == 5:
+            if count == 2:
                 object = True
                 print("the object is ...")
                 print(object)
         sleep(1)
     return(object)
+
+#itemsensor()
 

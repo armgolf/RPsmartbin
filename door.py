@@ -10,7 +10,7 @@ def door():
     for x in range(5):
         dist = sensor.distance * 100
         print(dist)
-        if dist < 10:
+        if dist > 5:
             count = count + 1
             if count == 2:
                 open = True
@@ -21,3 +21,4 @@ def door():
 
     return(open)
 
+#door()

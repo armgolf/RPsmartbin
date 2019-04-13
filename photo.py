@@ -23,6 +23,7 @@ def photo():
     camera.close()
 
 print(datetime.datetime.now())
+photo()
 
 #for i in range(1, 5):
 #    photo()
