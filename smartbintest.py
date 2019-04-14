@@ -7,17 +7,11 @@ import os
 import json
 from gpiozero import DistanceSensor
 import photo
-print("hello")
 import identify
-print("hello")
 import centralmotor
 import motor3
-print("hello")
-#import openplate
 import itemsensor
-print("hello")
 import door
-print("hello")
 
 #an object has been put in the bin, rotate, and identify the object
 def binstatus1(items):
@@ -43,44 +37,48 @@ def binstatus1(items):
         return(items)
 
 #the door is closed, empty any compartments which contain items
-def binstatus2(items):
+def binstatus2(items, holes):
     while items != [0,0,0,0]:
         #for each element of the items array
         for i in range(1, 4):
-            open = door.door()
-            if open == True:
-                break
             #if object matches compartment category, empty the compartment
             if items[i-1] == 'Metal can':
-                motor4.compartment1()
-                items[i-1] = 0
+                holestarget = [1,0,0,0]
             if items[i] == 'Plastic Bottle':
-                motor5.compartment2()
-                items[i] = 0
+                holestarget = [0,1,0,0]
             if items[i+1] == 'tbd':
-                motor5.compartment3()
-                items[i+1] = 0
+                holestarget = [0,0,1,0]
             if items[i+2] == 'tbd':
-                motor4.compartment4()
-                items[i+2] = 0
-            motor3.motor()
+                holestarget = [0,0,0,1]
+            turning = [a + b for a,b in zip(holes, holestarget)]
+            if turning == [1,0,0,1]:
+                motor3.clock()
+            if turning == [0,1,0,1]:
+                motor3.clock()
+            if turning == [0,0,1,1]:
+                motor3.clock()
+            if turning == [0,0,0,2]:
+                motor3.clock()
+
             items = [items[3], items[0], items[1], items[2]]
     return(items)
 
+    motor3.run()
+
 #initialise items array
 items = [0,0,0,0]
+holes = [0,0,0,1]
 print(items)
-power = True
-while power == True:
-    print("Checking door")
-    open = door.door()
-    #if an object has been input to the bin, rotate and identify it
-    if open == True:
-        print("going to binstatus1")
-        items = binstatus1(items)
+print("Checking door")
+open = door.door()
+#if an object has been input to the bin, rotate and identify it
+if open == True:
+    print("going to binstatus1")
+    items = binstatus1(items)
+    binstatus2(items, holes)
 
-    #check if another object is about to be input to the bin
-    open = door.door()
-    #while the door is open wait for object to be input or door to close
-    if open == False:
-        binstatus2(items)
+#check if another object is about to be input to the bin
+#open = door.door()
+#while the door is open wait for object to be input or door to close
+if open == False:
+    binstatus2(items)

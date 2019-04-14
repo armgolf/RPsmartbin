@@ -18,6 +18,8 @@ def itemsensor():
                 print(object)
         sleep(1)
     return(object)
+    GPIO.cleanup()
+    GPIO.setmode(GPIO.BCM)
 
 #itemsensor()
 

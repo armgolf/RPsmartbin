@@ -1,8 +1,53 @@
 import RPi.GPIO as GPIO
 import time
 from threading import Thread
-
 GPIO.setmode(GPIO.BCM)
+
+def anticlock():
+  control_pins = [8,11,9,10]
+  for pin in control_pins:
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, 0)
+  halfstep_seq = [
+    [1,0,0,0],
+    [1,1,0,0],
+    [0,1,0,0],
+    [0,1,1,0],
+    [0,0,1,0],
+    [0,0,1,1],
+    [0,0,0,1],
+    [1,0,0,1]
+  ]
+  for i in range(25):
+    for halfstep in range(8):
+      for pin in range(4):
+        GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
+      time.sleep(0.01)
+  GPIO.cleanup()
+  GPIO.setmode(GPIO.BCM)
+
+def clock():
+  control_pins = [10,9,11,8]
+  for pin in control_pins:
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, 0)
+  halfstep_seq = [
+    [1,0,0,0],
+    [1,1,0,0],
+    [0,1,0,0],
+    [0,1,1,0],
+    [0,0,1,0],
+    [0,0,1,1],
+    [0,0,0,1],
+    [1,0,0,1]
+  ]
+  for i in range(13):
+    for halfstep in range(8):
+      for pin in range(4):
+        GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
+      time.sleep(0.01)
+  GPIO.cleanup()
+  GPIO.setmode(GPIO.BCM)
 
 def motor1():
   #control_pins = [4,17,27,22]
@@ -20,7 +65,7 @@ def motor1():
     [0,0,0,1],
     [1,0,0,1]
   ]
-  for i in range(4000):
+  for i in range(2250):
     for halfstep in range(8):
       for pin in range(4):
         GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
@@ -44,7 +89,7 @@ def motor2():
     [0,0,0,1],
     [1,0,0,1]
   ]
-  for i in range(4000):
+  for i in range(2250):
     for halfstep in range(8):
       for pin in range(4):
         GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
@@ -55,5 +100,8 @@ def motor2():
 def run():
     Thread(target = motor1).start()
     Thread(target = motor2).start()
+    Thread(target = clock).start()
 
-#run()
+clock()
+anticlock()
+clock()

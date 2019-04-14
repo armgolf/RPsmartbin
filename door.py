@@ -20,5 +20,7 @@ def door():
         
 
     return(open)
+    GPIO.cleanup()
+    GPIO.setmode(GPIO.BCM)
 
 #door()
